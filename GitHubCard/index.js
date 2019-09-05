@@ -1,18 +1,22 @@
 // VARIABLE ASSIGNMENT
 const cards = document.querySelector('.cards');
-const usersArray = ['ofega', 'tetondan', 'dustinmyers', 'justsml', 'luishrd', 'bigknell'];
 
 
-// DATA REQUEST FOR EACH USER
-usersArray.forEach(follower => {
-  axios.get(`https://api.github.com/users/${follower}`)
+// DATA REQUEST
+axios.get('https://api.github.com/users/Ofega/followers')
   .then(response => {
-    cards.appendChild(githubUserCard(response.data));
+    const usersArray = response.data.reduce((acc, user) => {
+      acc.push(user.login);
+      return acc;
+    }, []);
+
+    usersArray.forEach(follower => {
+      axios.get(`https://api.github.com/users/${follower}`)
+      .then(response => {
+        cards.appendChild(githubUserCard(response.data));
+      })
+    })
   })
-  .catch(error => {
-    console.log(error);
-  })
-})
 
 
 // FUNCTIONAL COMPONENT(USER CARD)
@@ -46,7 +50,7 @@ function githubUserCard(user) {
   profileURL.textContent = user.html_url;
   followers.textContent = `Followers: ${user.followers}`;
   following.textContent = `Following: ${user.following}`;
-  bio.textContent = !user.bio ? 'Nothing to say :)' : user.bio;
+  bio.textContent = `Bio: ${!user.bio ? 'Nothing to say :)' : user.bio}`;
 
   // NEST ELEMENTS TO FORM COMPONENT
   cardInfo.appendChild(name);
