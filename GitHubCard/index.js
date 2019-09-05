@@ -2,7 +2,7 @@
 const cards = document.querySelector('.cards');
 
 
-// DATA REQUEST
+// DATA REQUEST TO GET ALL FOLLOWERS USERNAME
 axios.get('https://api.github.com/users/Ofega/followers')
   .then(response => {
     const usersArray = response.data.reduce((acc, user) => {
@@ -10,6 +10,7 @@ axios.get('https://api.github.com/users/Ofega/followers')
       return acc;
     }, []);
 
+    // DATA REQUEST TO GET EACH FOLLOWER'S DATA
     usersArray.forEach(follower => {
       axios.get(`https://api.github.com/users/${follower}`)
       .then(response => {
